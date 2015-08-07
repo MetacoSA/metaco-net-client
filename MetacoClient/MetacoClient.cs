@@ -12,7 +12,10 @@ namespace MetacoClient
 		private readonly bool _metacoTestingMode;
 		private readonly MetacoHttpClient _httpClient;
 
-		public string LatestDebugData;
+		public string LatestDebugData
+		{
+			get { return _httpClient.DebugInfo; }
+		}
 
 		public MetacoClient(MetacoClientBuilder builder)
 		{

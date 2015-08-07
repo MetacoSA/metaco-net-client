@@ -24,6 +24,12 @@ namespace MetacoClient.Http
 			this._metacoTestingMode = metacoTestingMode;
 		}
 
+		public string DebugInfo
+		{
+			get; 
+			private set; 
+		}
+
 		private HttpClient CreateClient()
 		{
 			var client = new HttpClient();
@@ -121,12 +127,12 @@ namespace MetacoClient.Http
 			}
 		}
 
-		private static void FetchDebugData(HttpResponseMessage response)
+		private void FetchDebugData(HttpResponseMessage response)
 		{
 			var defaultInfo = default(KeyValuePair<string, IEnumerable<string>>);
 			var debugInfo = response.Headers.FirstOrDefault(x => x.Key == "X-Metaco-DebugData");
 			if(!debugInfo.Equals(defaultInfo))
-				Trace.WriteLine(string.Join(" || ", debugInfo.Value));
+				DebugInfo = string.Join(" || ", debugInfo.Value);
 		}
 
 		private string GetUrl(string relativeUrl)
