@@ -4,10 +4,10 @@ namespace MetacoClient
 {
 	public class MetacoClientBuilder
 	{
-		public string MetacoApiId { get; set; }
-		public string MetacoApiKey { get; set; }
-		public string MetacoApiUrl { get; set; }
-		public bool MetacoTestingMode { get; set; }
+		public string MetacoApiId { get; private set; }
+		public string MetacoApiKey { get; private set; }
+		public string MetacoApiUrl { get; private set; }
+		public bool MetacoTestingMode { get; private set; }
 
 		public MetacoClient CreateClient()
 		{

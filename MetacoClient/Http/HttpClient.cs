@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Formatting;
 using Newtonsoft.Json;
 
 namespace MetacoClient.Http
@@ -82,8 +80,8 @@ namespace MetacoClient.Http
 					HandleInvalidResponse(response);
 
 				FetchDebugData(response);
-				var mediaFormat = new JsonMediaTypeFormatter();
-				var deserialized = response.Content.ReadAsAsync<T>(new[] {mediaFormat}).Result;
+				var responseContent = response.Content.ReadAsStringAsync().Result;
+				var deserialized = JsonConvert.DeserializeObject<T>(responseContent);
 				return deserialized;
 			}
 		}
@@ -110,21 +108,23 @@ namespace MetacoClient.Http
 		{
 			MetacoErrorResult metacoError;
 			string content=null;
+			Exception inner = null;
 			try
 			{
 				content = response.Content.ReadAsStringAsync().Result;
 				metacoError = JsonConvert.DeserializeObject<MetacoErrorResult>(content);
 				if (string.IsNullOrEmpty(metacoError.metaco_error))
-					throw new MetacoClientException(metacoError, ErrorType.UnknownError, content, (int) response.StatusCode);
+					throw new MetacoClientException(metacoError, ErrorType.UnknownError, content, (int) response.StatusCode, inner);
 			}
 			catch (Exception e)
 			{
 				metacoError = new MetacoErrorResult();
 				metacoError.metaco_error = "";
 				metacoError.status= (int)response.StatusCode;
-				var errorType = MetacoErrorsDefinitions.GetErrorType(metacoError);
-				throw new MetacoClientException(metacoError, errorType, content, (int)response.StatusCode, e);
+				inner = e;
 			}
+			var errorType = MetacoErrorsDefinitions.GetErrorType(metacoError);
+			throw new MetacoClientException(metacoError, errorType, content, (int)response.StatusCode, inner);
 		}
 
 		private void FetchDebugData(HttpResponseMessage response)

@@ -4,6 +4,14 @@ namespace MetacoClient.Contracts
 {
 	public class HistoryCriteria 
 	{
+		public HistoryCriteria(int from, int to, string freq, bool orderAsc)
+		{
+			this.From = from;
+			this.To = to;
+			this.Freq = freq;
+			this.OrderAsc = orderAsc;
+		}
+
 		[JsonProperty("from")]
 		public int From
 		{

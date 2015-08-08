@@ -46,7 +46,8 @@ namespace MetacoClient.Tests
 			return key.GetPubKey(false).GetAddress(Network.TestNet);
 		}
 
-		public static string GetHexSignedTransaction(TransactionToSign txToSign) {
+		public static string GetHexSignedTransaction(TransactionToSign txToSign) 
+		{
 			var walletPrivateKey = ConfigurationManager.AppSettings[METACO_ENV_WALLET_PRIVATE_KEY_HEX_NAME];
 
 			var key = new Key(Encoders.Hex.DecodeData(walletPrivateKey));

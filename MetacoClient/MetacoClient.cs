@@ -99,7 +99,7 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria)
 		{
-			return GetAssetsHistory(criteria, null);
+			return GetAssetsHistory(criteria, new string[0]);
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace MetacoClient
 		/// <exception cref="MetacoClientException"></exception>
 		/// <see cref="http://docs.metaco.apiary.io/#reference/assets/assets-history/retrieve-history-of-all-assets">Online Documentation</see>
 		/// <remarks>Assets must be given using this format : USD,XAU,etc..</remarks>
-		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria, List<string> tickers)
+		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria, IEnumerable<string> tickers)
 		{
 			var tickersStr = string.Join(",", tickers);
 			tickersStr = !string.IsNullOrEmpty(tickersStr) ? tickersStr : "all";
@@ -134,7 +134,7 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public Order CreateOrder(NewOrder createOrder)
 		{
-			return _httpClient.Post<Order, NewOrder>("account/confirmation", createOrder);
+			return _httpClient.Post<Order, NewOrder>("orders", createOrder);
 		}
 
 		/// <summary>

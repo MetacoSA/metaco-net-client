@@ -24,7 +24,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("volumes")]
-		public List<int> Volumes
+		public List<decimal> Volumes
 		{
 			get; 
 			set;
