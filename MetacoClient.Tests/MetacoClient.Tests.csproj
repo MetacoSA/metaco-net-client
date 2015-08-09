@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="AccountTest.cs" />
     <Compile Include="AssetsTest.cs" />
+    <Compile Include="TransactionsTest.cs" />
     <Compile Include="OrdersTest.cs" />
     <Compile Include="MetacoClientTestBase.cs">
       <SubType>Code</SubType>

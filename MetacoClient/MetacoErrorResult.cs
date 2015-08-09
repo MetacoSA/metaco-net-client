@@ -1,14 +1,20 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace MetacoClient
 {
 	public class MetacoErrorResult
 	{
-		public int status { get; set; }
-		public String metaco_error { get; set; }
-		public String location { get; set; }
-		public String parameter_name { get; set; }
-		public String message { get; set; }
+		[JsonProperty("status")]
+		public int Status { get; set; }
+		[JsonProperty("metaco_error")]
+		public String MetacoError { get; set; }
+		[JsonProperty("location")]
+		public String Location { get; set; }
+		[JsonProperty("parameter_name")]
+		public String ParameterName { get; set; }
+		[JsonProperty("message")]
+		public String Message { get; set; }
 	}
 }
 

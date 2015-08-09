@@ -1,10 +1,11 @@
+using System;
 using Newtonsoft.Json;
 
 namespace MetacoClient.Contracts
 {
 	public class HistoryCriteria 
 	{
-		public HistoryCriteria(int from, int to, string freq, bool orderAsc)
+		public HistoryCriteria(DateTimeOffset from, DateTimeOffset to, string freq, bool orderAsc)
 		{
 			this.From = from;
 			this.To = to;
@@ -13,13 +14,13 @@ namespace MetacoClient.Contracts
 		}
 
 		[JsonProperty("from")]
-		public int From
+		public DateTimeOffset From
 		{
 			get;
 			set;
 		}
 		[JsonProperty("to")]
-		public int To
+		public DateTimeOffset To
 		{
 			get;
 			set;

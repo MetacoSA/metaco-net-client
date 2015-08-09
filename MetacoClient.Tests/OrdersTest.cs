@@ -13,20 +13,19 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CanProcessOrder()
 		{
-			var client = GetAuthenticatedMetacoClient().CreateClient();
+			var client = CreateAuthenticatedClient();
 
 			var newOrder = new NewOrder {
-				AmountAsset = 1, 
-				Change = "", 
+				AmountAsset = 100L, 
 				Funding = new List<string>(new []{ GetBitcoinAddress().ToString()}),
 				Recipient = GetBitcoinAddress().ToString(),
 				Ticker = "MTC:USD",
-				Type = "bid"
+				Type = OrderType.Buy
 			};
 
 			var created = client.CreateOrder(newOrder);
 			Assert.NotNull(created);
-			Assert.Equal(created.AmountAsset, 1L);
+			Assert.Equal(100L, created.AmountAsset);
 
 			var orderToSign = WaitForOrderState(client, created.Id, "Signing");
 			if (orderToSign == null) {
@@ -46,18 +45,17 @@ namespace MetacoClient.Tests
 				throw new Exception("Order " + created.Id + " took to long to go to Unconfirmed state");
 			}
 
-			Assert.Equal(1, (long)unconfirmed.AmountAsset);
+			Assert.Equal(1, unconfirmed.AmountAsset);
 
 			/** Try to delete broadcasting order **/
 			try {
 				client.CancelOrder(unconfirmed.Id);
 			} catch (MetacoClientException e) {
-				Assert.Equal(e.ErrorType, ErrorType.OrderNotCancellable);
+				Assert.Equal(ErrorType.OrderNotCancellable, e.ErrorType);
 			}
 
 
 			/** Fetch all the orders **/
-
 			var orders = client.GetOrders();
 
 			if (orders.Orders.All(x => x.Id != created.Id)) 
@@ -65,38 +63,35 @@ namespace MetacoClient.Tests
 				throw new Exception("Order " + created.Id + " is not present in orders list");
 			}
 		}
-#if false
+
 		[Fact]
-		public void clientCanCancelOrder() throws MetacoClientException, InterruptedException {
-			global::MetacoClient client = TestUtils.GetMetacoAuthenticatedClientTestBuilder()
-				.makeClient();
+		public void CanCancelOrder() 
+		{
+			var client = CreateAuthenticatedClient();
+			var funding = GetBitcoinAddress().ToString();
 
-			NewOrder newOrder = new NewOrder();
-			newOrder.setAmountAsset(1L);
-			newOrder.setChange("");
-			List<String> funding = new ArrayList<String>();
-			funding.add(TestUtils.GetBitcoinAddress());
-			newOrder.setFunding(funding);
-			newOrder.setRecipient(TestUtils.GetBitcoinAddress());
-			newOrder.setTicker("MTC:USD");
-			newOrder.setType("bid");
+			var newOrder = new NewOrder {
+				AmountAsset = 100L, 
+				Funding = new[] {funding}, 
+				Recipient = GetBitcoinAddress().ToString(), 
+				Ticker = "MTC:USD", 
+				Type = OrderType.Buy
+			};
 
-			Order created = client.createOrder(newOrder);
-			Assert.assertNotNull(created);
-			Assert.assertNotNull(created.getAmountAsset());
-			Assert.assertEquals((long)created.getAmountAsset(), 1);
+			var created = client.CreateOrder(newOrder);
+			Assert.NotNull(created);
+			Assert.Equal(100, created.AmountAsset);
 
-			client.cancelOrder(created.getId());
+			client.CancelOrder(created.Id);
 
 			/** Wait for cancel **/
-			Order canceled = WaitForOrderState(client, created.getId(), "Canceled");
+			var canceled = WaitForOrderState(client, created.Id, "Canceled");
 			if (canceled == null) {
-				Assert.fail("Order " + created.getId() + " took to long to go to Canceled state");
+				throw new Exception("Order " + created.Id + " took to long to go to Canceled state");
 			}
-			Assert.assertEquals(canceled.getCancelReason(), "explicit_cancel");
-			Assert.assertEquals("Canceled", canceled.getStatus());
+			Assert.Equal("explicit_cancel", canceled.CancelReason);
+			Assert.Equal(canceled.Status, "Canceled");
 		}
-#endif
 
 		private Order WaitForOrderState(MetacoClient client, string orderId, string status)
 		{

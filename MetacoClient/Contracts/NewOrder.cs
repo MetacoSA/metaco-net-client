@@ -1,12 +1,19 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MetacoClient.Contracts
 {
+	public enum OrderType
+	{
+		Buy, Sell
+	}
+
 	public class NewOrder 
 	{
 		[JsonProperty("type")]
-		public string Type
+		[JsonConverter(typeof(StringEnumConverter))]
+		public OrderType Type
 		{
 			get; 
 			set;
@@ -36,7 +43,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("funding")]
-		public List<string> Funding 
+		public IEnumerable<string> Funding 
 		{
 			get; 
 			set;

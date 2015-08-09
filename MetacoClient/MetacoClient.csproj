@@ -75,14 +75,14 @@
     <Compile Include="Contracts\ValidateAccountRequest.cs" />
     <Compile Include="Contracts\WalletDetails.cs" />
     <Compile Include="ErrorsDefinition.cs" />
+    <Compile Include="JsonSerializaer.cs" />
     <Compile Include="MetacoClient.cs" />
-    <Compile Include="MetacoClientBuilder.cs" />
     <Compile Include="MetacoClientException.cs" />
     <Compile Include="MetacoErrorResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Http\HttpClient.cs" />
+    <Compile Include="HttpClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

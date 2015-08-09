@@ -7,12 +7,13 @@ using Newtonsoft.Json;
 
 namespace MetacoClient.Http
 {
-	public class MetacoHttpClient
+	internal class MetacoHttpClient
 	{
 		private readonly string _metacoApiId;
 		private readonly string _metacoApiKey;
 		private readonly string _metacoApiUrl;
 		private readonly bool _metacoTestingMode;
+		private readonly JsonSerializaer _serializer;
 
 		public MetacoHttpClient(string metacoApiId, string metacoApiKey, string metacoApiUrl, bool metacoTestingMode)
 		{
@@ -20,6 +21,7 @@ namespace MetacoClient.Http
 			this._metacoApiKey = metacoApiKey;
 			this._metacoApiUrl = metacoApiUrl;
 			this._metacoTestingMode = metacoTestingMode;
+			this._serializer = new JsonSerializaer();
 		}
 
 		public string DebugInfo
@@ -35,6 +37,7 @@ namespace MetacoClient.Http
 			client.DefaultRequestHeaders.Add("X-Metaco-Key", _metacoApiKey);
 			if (_metacoTestingMode)
 				client.DefaultRequestHeaders.Add("X-Metaco-Debug", "true");
+
 			return client;
 		}
 
@@ -49,9 +52,7 @@ namespace MetacoClient.Http
 				FetchDebugData(response);
 				var result = response.Content.ReadAsStringAsync().Result;
 
-				return typeof (T) == typeof (string) 
-					? (T) (object) result 
-					: JsonConvert.DeserializeObject<T>(result);
+				return _serializer.Deserialize<T>(result);
 			}
 		}
 
@@ -80,9 +81,8 @@ namespace MetacoClient.Http
 					HandleInvalidResponse(response);
 
 				FetchDebugData(response);
-				var responseContent = response.Content.ReadAsStringAsync().Result;
-				var deserialized = JsonConvert.DeserializeObject<T>(responseContent);
-				return deserialized;
+				var result = response.Content.ReadAsStringAsync().Result;
+				return _serializer.Deserialize<T>(result);
 			}
 		}
 
@@ -113,14 +113,14 @@ namespace MetacoClient.Http
 			{
 				content = response.Content.ReadAsStringAsync().Result;
 				metacoError = JsonConvert.DeserializeObject<MetacoErrorResult>(content);
-				if (string.IsNullOrEmpty(metacoError.metaco_error))
+				if (string.IsNullOrEmpty(metacoError.MetacoError))
 					throw new MetacoClientException(metacoError, ErrorType.UnknownError, content, (int) response.StatusCode, inner);
 			}
 			catch (Exception e)
 			{
 				metacoError = new MetacoErrorResult();
-				metacoError.metaco_error = "";
-				metacoError.status= (int)response.StatusCode;
+				metacoError.MetacoError = "";
+				metacoError.Status= (int)response.StatusCode;
 				inner = e;
 			}
 			var errorType = MetacoErrorsDefinitions.GetErrorType(metacoError);

@@ -10,7 +10,7 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CanGetAssets()
 		{
-			var client = GetAnonymousMetacoClient().CreateClient();
+			var client = CreateClient();
 
 			var assets = client.GetAssets();
 			Assert.NotNull(assets);
@@ -20,7 +20,7 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CanGetAsset()
 		{
-			var client = GetAnonymousMetacoClient().CreateClient();
+			var client = CreateClient();
 
 			var asset = client.GetAsset("MTC:USD");
 			Assert.NotNull(asset);
@@ -30,7 +30,7 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CannotGetFalseAsset()
 		{
-			var client = GetAnonymousMetacoClient().CreateClient();
+			var client = CreateClient();
 			try
 			{
 				var asset = client.GetAsset("FAKE:ASSET");
@@ -40,22 +40,19 @@ namespace MetacoClient.Tests
 			{
 				Assert.Equal(e.ErrorType, ErrorType.InvalidInput);
 				Assert.Equal(e.Content, "{\r\n  \"status\": 404,\r\n  \"metaco_error\": \"invalid_input\",\r\n  \"parameter_name\": \"tickerId\",\r\n  \"message\": \"Ticker not found\"\r\n}");
-				Assert.Equal(e.MetacoError.message, "Ticker not found");
+				Assert.Equal(e.MetacoError.Message, "Ticker not found");
 				Assert.Equal(e.StatusCode, 404);
-				Assert.Equal(e.MetacoError.location, null);
-				Assert.Equal(e.MetacoError.parameter_name, "tickerId");
+				Assert.Equal(e.MetacoError.Location, null);
+				Assert.Equal(e.MetacoError.ParameterName, "tickerId");
 			}
 		}
 
 		[Fact]
 		public void CanGetAssetsHistory()
 		{
-			var client = GetAnonymousMetacoClient().CreateClient();
+			var client = CreateClient();
 
-			var currentTimestamp = DateTime.UtcNow;
-			var timestampThirtyMinutesAgo = currentTimestamp.Subtract(TimeSpan.FromMinutes(30));
-
-			var criteria = new HistoryCriteria(timestampThirtyMinutesAgo.ToUnixTimestamp(), currentTimestamp.ToUnixTimestamp(), "10m", false);
+			var criteria = new HistoryCriteria(DateTimeOffset.UtcNow.AddSeconds(-30 * 60), DateTimeOffset.UtcNow, "10m", false);
 
 			var historyResult = client.GetAssetsHistory(criteria);
 			Assert.NotNull(historyResult);
@@ -65,12 +62,9 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CanGetSpecificAssetsHistory()
 		{
-			var client = GetAnonymousMetacoClient().CreateClient();
+			var client = CreateClient();
 
-			var currentTimestamp = DateTime.UtcNow;
-			var timestampThirtyMinutesAgo = currentTimestamp.Subtract(TimeSpan.FromMinutes(30));
-
-			var criteria = new HistoryCriteria(timestampThirtyMinutesAgo.ToUnixTimestamp(), currentTimestamp.ToUnixTimestamp(), "10m", false);
+			var criteria = new HistoryCriteria(DateTimeOffset.UtcNow.AddSeconds(-30 * 60), DateTimeOffset.UtcNow, "10m", false);
 
 			var historyResult = client.GetAssetsHistory(criteria, new[] {"USD"});
 			Assert.NotNull(historyResult);

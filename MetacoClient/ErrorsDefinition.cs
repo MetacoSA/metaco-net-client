@@ -25,7 +25,7 @@ namespace MetacoClient
 		Undefined
 	};
 
-	public static class MetacoErrorsDefinitions
+	internal static class MetacoErrorsDefinitions
 	{
 		private static readonly Dictionary<ErrorType, string> Errors = new Dictionary<ErrorType, string> {
 			{ErrorType.InvalidInput, "invalid_input"},
@@ -65,18 +65,18 @@ namespace MetacoClient
 				return ErrorType.UnknownError;
 			}
 
-			var type = FromString(result.metaco_error);
+			var type = FromString(result.MetacoError);
 			if (type == ErrorType.Undefined)
 			{
-				if (result.status == 404)
+				if (result.Status == 404)
 				{
 					type = ErrorType.NotFound;
 				}
-				else if (result.status == 401)
+				else if (result.Status == 401)
 				{
 					type = ErrorType.Unauthorized;
 				}
-				else if (result.status >= 500 && result.status < 600)
+				else if (result.Status >= 500 && result.Status < 600)
 				{
 					type = ErrorType.ServerError;
 				}

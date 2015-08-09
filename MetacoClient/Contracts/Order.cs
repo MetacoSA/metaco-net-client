@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MetacoClient.Contracts
 {
@@ -35,7 +36,8 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("type")]
-		public string Type
+		[JsonConverter(typeof(StringEnumConverter))]
+		public OrderType Type
 		{
 			get; 
 			set;

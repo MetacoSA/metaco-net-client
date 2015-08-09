@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -6,7 +7,7 @@ namespace MetacoClient.Contracts
 	public class WalletDetails 
 	{
 		[JsonProperty("timestamp")]
-		public int Timestamp
+		public DateTimeOffset Timestamp
 		{
 			get; 
 			set;
@@ -18,7 +19,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("addresses")]
-		public List<string> Addresses
+		public IEnumerable<string> Addresses
 		{
 			get; 
 			set;
@@ -42,7 +43,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("transactions")]
-		public List<Transaction> Transactions
+		public IEnumerable<Transaction> Transactions
 		{
 			get;
 			set;

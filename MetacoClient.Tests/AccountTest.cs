@@ -9,7 +9,7 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void ClientCanRegisterAndValidateAccount()
 		{
-			var client = GetAnonymousMetacoClient().CreateClient();
+			var client = CreateClient();
 
 			/** Account registration **/
 			var result = client.RegisterAccount(new RegisterAccountRequest {Phone = "+15005550006"});
@@ -17,11 +17,7 @@ namespace MetacoClient.Tests
 
 			var validationCode = client.LatestDebugData;
 
-			client = GetAuthenticatedMetacoClient()
-				.WithApiId(result.ApiId)
-				.WithApiKey(result.ApiKey)
-				.WithTestingMode(true)
-				.CreateClient();
+			client = CreateClient(result.ApiId,result.ApiKey);
 
 			/** Account Validation **/
 			client.ConfirmPhoneNumber(new ValidateAccountRequest {Code = validationCode});
@@ -48,7 +44,7 @@ namespace MetacoClient.Tests
 		{
 			try 
 			{
-				var client = GetAnonymousMetacoClient().CreateClient();
+				var client = CreateClient();
 				var result = client.RegisterAccount(new RegisterAccountRequest{ Phone = ""});
 				throw new Exception("Cannot double validate account!");
 			} 
@@ -62,7 +58,7 @@ namespace MetacoClient.Tests
 		public void ClientCantGetAccountStatus() {
 			try 
 			{
-				var client = GetAnonymousMetacoClient().CreateClient();
+				var client = CreateClient();
 
 				var status = client.GetAccountStatus();
 			} catch (MetacoClientException e) {

@@ -1,4 +1,5 @@
 
+using System;
 using Newtonsoft.Json;
 
 namespace MetacoClient.Contracts
@@ -6,7 +7,7 @@ namespace MetacoClient.Contracts
 	public class Transaction 
 	{
 		[JsonProperty("created")]
-		public int Created
+		public DateTimeOffset Created
 		{
 			get; 
 			set;
@@ -18,7 +19,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("type")]
-		public string Type
+		public OrderType Type
 		{
 			get; 
 			set;
@@ -48,7 +49,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("feePaid")]
-		public long FeePaid
+		public long? FeePaid
 		{
 			get; 
 			set;

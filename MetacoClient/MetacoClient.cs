@@ -6,10 +6,6 @@ namespace MetacoClient
 {
 	public class MetacoClient
 	{
-		private readonly string _metacoApiId;
-		private readonly string _metacoApiKey;
-		private readonly string _metacoApiUrl;
-		private readonly bool _metacoTestingMode;
 		private readonly MetacoHttpClient _httpClient;
 
 		public string LatestDebugData
@@ -17,14 +13,24 @@ namespace MetacoClient
 			get { return _httpClient.DebugInfo; }
 		}
 
-		public MetacoClient(MetacoClientBuilder builder)
+		public MetacoClient(string apiUrl)
+			: this(apiUrl, false)
 		{
-			this._metacoApiId = builder.MetacoApiId;
-			this._metacoApiKey = builder.MetacoApiKey;
-			this._metacoApiUrl = builder.MetacoApiUrl;
-			this._metacoTestingMode = builder.MetacoTestingMode;
+		}
 
-			this._httpClient = new MetacoHttpClient(this._metacoApiId, this._metacoApiKey, this._metacoApiUrl, this._metacoTestingMode);
+		public MetacoClient(string apiUrl, bool testingMode)
+			: this(apiUrl, null, null, testingMode)
+		{
+		}
+
+		public MetacoClient(string apiUrl, string apiId, string apiKey)
+			: this(apiUrl, apiId, apiKey, false)
+		{
+		}
+
+		public MetacoClient(string apiUrl, string apiId, string apiKey, bool testingMode)
+		{
+			this._httpClient = new MetacoHttpClient(apiId, apiKey, apiUrl, testingMode);
 		}
 
 
@@ -117,8 +123,13 @@ namespace MetacoClient
 			tickersStr = !string.IsNullOrEmpty(tickersStr) ? tickersStr : "all";
 			const string urlTemplate = "assets/history?underlyings={0}&from={1}&to={2}&freq={3}&orderAsc={4}";
 
-			return _httpClient.Get<AssetsHistoryResult>(string.Format(urlTemplate, 
-			                                                         tickersStr, criteria.From, criteria.To, criteria.Freq, criteria.OrderAsc));
+			return _httpClient.Get<AssetsHistoryResult>(
+				string.Format(urlTemplate, 
+					tickersStr, 
+					criteria.From.ToEpoch(), 
+					criteria.To.ToEpoch(), 
+					criteria.Freq, 
+					criteria.OrderAsc));
 
 		}
 
@@ -218,7 +229,7 @@ namespace MetacoClient
 			}
 			if (!string.IsNullOrEmpty(tx.Change))
 			{
-				parms.Add("change=%s" + tx.Change);
+				parms.Add("change=" + tx.Change);
 			}
 			if (!string.IsNullOrEmpty(tx.From))
 			{

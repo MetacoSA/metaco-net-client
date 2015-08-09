@@ -16,7 +16,7 @@ namespace MetacoClient
 		}
 
 		public MetacoClientException(MetacoErrorResult errorResult, ErrorType errorType, string content, int statusCode, Exception inner)
-			: base(string.Format("Metaco API failed with \"{0}\". {1}", errorResult.message, (inner!=null ? "See inner exception": "")), inner)
+			: base(string.Format("Metaco API failed with \"{0}\". {1}", errorResult.Message, (inner!=null ? "See inner exception": "")), inner)
 		{
 			this.MetacoError = errorResult;
 			this.ErrorType = errorType;

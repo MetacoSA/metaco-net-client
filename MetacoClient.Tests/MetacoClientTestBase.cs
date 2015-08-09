@@ -3,6 +3,7 @@ using MetacoClient.Contracts;
 using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
+using Xunit;
 using Transaction = NBitcoin.Transaction;
 
 namespace MetacoClient.Tests
@@ -17,25 +18,24 @@ namespace MetacoClient.Tests
 	    private const string DEFAULT_API_URL = "http://api.testnet.metaco.com/v1/";
 
 
-		public static MetacoClientBuilder GetAnonymousMetacoClient()
+		public static MetacoClient CreateClient()
 		{
 			var apiUrl = ConfigurationManager.AppSettings[METACO_ENV_API_URL_NAME] ?? DEFAULT_API_URL;
-			return new MetacoClientBuilder()
-					.WithApiUrl(apiUrl)
-					.WithTestingMode(true);
+			return new MetacoClient(apiUrl, true);
 		}
 
-		public static MetacoClientBuilder GetAuthenticatedMetacoClient()
+		public static MetacoClient CreateClient(string apiId, string apiKey)
 		{
 			var apiUrl = ConfigurationManager.AppSettings[METACO_ENV_API_URL_NAME] ?? DEFAULT_API_URL;
-			var apiId = ConfigurationManager.AppSettings[METACO_ENV_API_ID_NAME];
-			var apiKey = ConfigurationManager.AppSettings[METACO_ENV_API_KEY_NAME];
+			return new MetacoClient(apiUrl, apiId, apiKey, true);
+	    }
 
-			return new MetacoClientBuilder()
-					.WithApiUrl(apiUrl)
-					.WithApiId(apiId)
-					.WithApiKey(apiKey)
-					.WithTestingMode(true);
+		public static MetacoClient CreateAuthenticatedClient()
+		{
+			var apiUrl = ConfigurationManager.AppSettings[METACO_ENV_API_URL_NAME] ?? DEFAULT_API_URL;
+			var apiId = ConfigurationManager.AppSettings[METACO_ENV_API_ID_NAME] ?? DEFAULT_API_URL;
+			var apiKey = ConfigurationManager.AppSettings[METACO_ENV_API_KEY_NAME] ?? DEFAULT_API_URL;
+			return new MetacoClient(apiUrl, apiId, apiKey, true);
 	    }
 
 		public static BitcoinAddress GetBitcoinAddress() 
@@ -43,7 +43,8 @@ namespace MetacoClient.Tests
 			var walletPrivateKey = ConfigurationManager.AppSettings[METACO_ENV_WALLET_PRIVATE_KEY_HEX_NAME];
 
 			var key = new ECKey(Encoders.Hex.DecodeData(walletPrivateKey), true);
-			return key.GetPubKey(false).GetAddress(Network.TestNet);
+			var k = new Key(Encoders.Hex.DecodeData(walletPrivateKey));
+			return k.PubKey.GetAddress(Network.TestNet);
 		}
 
 		public static string GetHexSignedTransaction(TransactionToSign txToSign) 
@@ -51,20 +52,23 @@ namespace MetacoClient.Tests
 			var walletPrivateKey = ConfigurationManager.AppSettings[METACO_ENV_WALLET_PRIVATE_KEY_HEX_NAME];
 
 			var key = new Key(Encoders.Hex.DecodeData(walletPrivateKey));
-			var addr = key.PubKey.GetAddress(Network.TestNet);
-			//var scriptPubKey = Script.CreateFromDestinationAddress(addr);
 
+			var scriptPubKey = PayToPubkeyHashTemplate.Instance.GenerateScriptPubKey(key.PubKey);
 			var tx = new Transaction(Encoders.Hex.DecodeData(txToSign.Raw));
-			var tb = new TransactionBuilder();
-			var signedTx = tb
-				.ContinueToBuild(tx)
-				.AddKeys(key)
-				.SignTransaction(tx);
 
-			
-			tb.Verify(signedTx);
+			foreach(var inputsToSign in txToSign.InputsToSign)
+			{
+				var sigHash = tx.GetSignatureHash(scriptPubKey, inputsToSign.Index);
+				var sig = key.Sign(sigHash);
 
-			return signedTx.ToHex();
+				var txSign = new TransactionSignature(sig, SigHash.All);
+				var inputScript = PayToPubkeyHashTemplate.Instance.GenerateScriptSig(txSign, key.PubKey);
+
+				tx.Inputs[inputsToSign.Index].ScriptSig = inputScript;
+				Assert.True(Script.VerifyScript(scriptPubKey, tx, inputsToSign.Index));
+			}
+
+			return tx.ToHex();
 		}
 	}
 }
