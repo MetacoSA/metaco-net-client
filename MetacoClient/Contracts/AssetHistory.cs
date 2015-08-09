@@ -12,19 +12,19 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("quotes")]
-		public List<decimal> Quotes 
+		public IEnumerable<decimal> Quotes 
 		{
 			get; 
 			set;
 		}
 		[JsonProperty("times")]
-		public List<int> Times 
+		public IEnumerable<int> Times 
 		{
 			get; 
 			set;
 		}
 		[JsonProperty("volumes")]
-		public List<decimal> Volumes
+		public IEnumerable<decimal> Volumes
 		{
 			get; 
 			set;

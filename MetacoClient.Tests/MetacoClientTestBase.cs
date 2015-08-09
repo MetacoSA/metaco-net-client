@@ -1,7 +1,6 @@
 using System.Configuration;
 using MetacoClient.Contracts;
 using NBitcoin;
-using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;
 using Xunit;
 using Transaction = NBitcoin.Transaction;
@@ -18,33 +17,32 @@ namespace MetacoClient.Tests
 	    private const string DEFAULT_API_URL = "http://api.testnet.metaco.com/v1/";
 
 
-		public static MetacoClient CreateClient()
+		public static RestClient CreateClient()
 		{
 			var apiUrl = ConfigurationManager.AppSettings[METACO_ENV_API_URL_NAME] ?? DEFAULT_API_URL;
-			return new MetacoClient(apiUrl, true);
+			return new RestClient(apiUrl, true);
 		}
 
-		public static MetacoClient CreateClient(string apiId, string apiKey)
+		public static RestClient CreateClient(string apiId, string apiKey)
 		{
 			var apiUrl = ConfigurationManager.AppSettings[METACO_ENV_API_URL_NAME] ?? DEFAULT_API_URL;
-			return new MetacoClient(apiUrl, apiId, apiKey, true);
+			return new RestClient(apiUrl, apiId, apiKey, true);
 	    }
 
-		public static MetacoClient CreateAuthenticatedClient()
+		public static RestClient CreateAuthenticatedClient()
 		{
 			var apiUrl = ConfigurationManager.AppSettings[METACO_ENV_API_URL_NAME] ?? DEFAULT_API_URL;
 			var apiId = ConfigurationManager.AppSettings[METACO_ENV_API_ID_NAME] ?? DEFAULT_API_URL;
 			var apiKey = ConfigurationManager.AppSettings[METACO_ENV_API_KEY_NAME] ?? DEFAULT_API_URL;
-			return new MetacoClient(apiUrl, apiId, apiKey, true);
+			return new RestClient(apiUrl, apiId, apiKey, true);
 	    }
 
 		public static BitcoinAddress GetBitcoinAddress() 
 		{
 			var walletPrivateKey = ConfigurationManager.AppSettings[METACO_ENV_WALLET_PRIVATE_KEY_HEX_NAME];
 
-			var key = new ECKey(Encoders.Hex.DecodeData(walletPrivateKey), true);
-			var k = new Key(Encoders.Hex.DecodeData(walletPrivateKey));
-			return k.PubKey.GetAddress(Network.TestNet);
+			var key = new Key(Encoders.Hex.DecodeData(walletPrivateKey));
+			return key.PubKey.GetAddress(Network.TestNet);
 		}
 
 		public static string GetHexSignedTransaction(TransactionToSign txToSign) 

@@ -19,7 +19,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("type")]
-		public OrderType Type
+		public string Type
 		{
 			get; 
 			set;

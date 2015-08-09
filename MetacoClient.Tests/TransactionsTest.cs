@@ -25,7 +25,7 @@ namespace MetacoClient.Tests
 			var created = client.CreateTransaction(newTransaction);
 			Assert.NotNull(created);
 			Assert.NotNull(created.Raw);
-			Assert.Equal(addr, created.InputsToSign[0].SigningAddress);
+			Assert.Equal(addr, created.InputsToSign.First().SigningAddress);
 
 			var rawTx = new RawTransaction {Raw = GetHexSignedTransaction(created)};
 			var result = client.BroadcastTransaction(rawTx);
@@ -50,7 +50,7 @@ namespace MetacoClient.Tests
 			var created = client.CreateTransaction(newTransaction);
 			Assert.NotNull(created);
 			Assert.NotNull(created.Raw);
-			Assert.Equal(addr, created.InputsToSign[0].SigningAddress);
+			Assert.Equal(addr, created.InputsToSign.First().SigningAddress);
 
 			var rawTx = new RawTransaction{ Raw = GetHexSignedTransaction(created)};
 			var result = client.BroadcastTransaction(rawTx);

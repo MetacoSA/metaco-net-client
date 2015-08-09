@@ -37,7 +37,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("balances")]
-		public List<Balance> Balances
+		public IEnumerable<Balance> Balances
 		{
 			get; 
 			set;

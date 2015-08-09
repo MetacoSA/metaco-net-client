@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,12 +41,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\AccountRegistrationResult.cs" />
@@ -75,7 +70,7 @@
     <Compile Include="Contracts\ValidateAccountRequest.cs" />
     <Compile Include="Contracts\WalletDetails.cs" />
     <Compile Include="ErrorsDefinition.cs" />
-    <Compile Include="JsonSerializaer.cs" />
+    <Compile Include="JsonSerializer.cs" />
     <Compile Include="MetacoClient.cs" />
     <Compile Include="MetacoClientException.cs" />
     <Compile Include="MetacoErrorResult.cs" />

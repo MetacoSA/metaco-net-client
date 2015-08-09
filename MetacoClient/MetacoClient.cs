@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MetacoClient.Contracts;
 using MetacoClient.Http;
 
 namespace MetacoClient
 {
-	public class MetacoClient
+	public class RestClient
 	{
 		private readonly MetacoHttpClient _httpClient;
 
@@ -13,24 +14,31 @@ namespace MetacoClient
 			get { return _httpClient.DebugInfo; }
 		}
 
-		public MetacoClient(string apiUrl)
+		public RestClient(string apiUrl)
 			: this(apiUrl, false)
 		{
 		}
 
-		public MetacoClient(string apiUrl, bool testingMode)
+		public RestClient(string apiUrl, bool testingMode)
 			: this(apiUrl, null, null, testingMode)
 		{
 		}
 
-		public MetacoClient(string apiUrl, string apiId, string apiKey)
+		public RestClient(string apiUrl, string apiId, string apiKey)
 			: this(apiUrl, apiId, apiKey, false)
 		{
 		}
 
-		public MetacoClient(string apiUrl, string apiId, string apiKey, bool testingMode)
+		public RestClient(string apiUrl, string apiId, string apiKey, bool testingMode)
+			: this(new Uri(apiUrl), apiId, apiKey, testingMode)
 		{
-			this._httpClient = new MetacoHttpClient(apiId, apiKey, apiUrl, testingMode);
+		}
+
+		public RestClient(Uri apiUrl, string apiId, string apiKey, bool testingMode)
+		{
+			if(apiUrl == null)
+				throw new ArgumentNullException("apiUrl");
+			_httpClient = new MetacoHttpClient(apiId, apiKey, apiUrl, testingMode);
 		}
 
 
@@ -68,6 +76,9 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public void ConfirmPhoneNumber(ValidateAccountRequest request)
 		{
+			if (request == null) 
+				throw new ArgumentNullException("request");
+
 			_httpClient.Post("account/confirmation", request);
 		}
 
@@ -92,6 +103,9 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public Asset GetAsset(string ticker)
 		{
+			if (string.IsNullOrEmpty(ticker)) 
+				throw new ArgumentNullException("ticker");
+
 			return _httpClient.Get<Asset>(string.Format("assets/{0}", ticker));
 		}
 
@@ -105,6 +119,9 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria)
 		{
+			if (criteria == null) 
+				throw new ArgumentNullException("criteria");
+
 			return GetAssetsHistory(criteria, new string[0]);
 		}
 
@@ -119,6 +136,11 @@ namespace MetacoClient
 		/// <remarks>Assets must be given using this format : USD,XAU,etc..</remarks>
 		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria, IEnumerable<string> tickers)
 		{
+			if (criteria == null) 
+				throw new ArgumentNullException("criteria");
+			if (tickers == null) 
+				throw new ArgumentNullException("tickers");
+
 			var tickersStr = string.Join(",", tickers);
 			tickersStr = !string.IsNullOrEmpty(tickersStr) ? tickersStr : "all";
 			const string urlTemplate = "assets/history?underlyings={0}&from={1}&to={2}&freq={3}&orderAsc={4}";
@@ -145,6 +167,9 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public Order CreateOrder(NewOrder createOrder)
 		{
+			if (createOrder == null) 
+				throw new ArgumentNullException("createOrder");
+
 			return _httpClient.Post<Order, NewOrder>("orders", createOrder);
 		}
 
@@ -170,6 +195,9 @@ namespace MetacoClient
 		/// <see cref="http://docs.metaco.apiary.io/#reference/orders/order-information/retreive-an-order">Online Documentation</see>
 		public Order GetOrder(string id)
 		{
+			if (string.IsNullOrEmpty(id)) 
+				throw new ArgumentNullException("id");
+
 			return _httpClient.Get<Order>(string.Format("orders/{0}", id));
 		}
 
@@ -188,6 +216,11 @@ namespace MetacoClient
 		/// <see cref="http://docs.metaco.apiary.io/#reference/orders/order-information/submit-a-signed-order">Online Documentation</see>
 		public Order SubmitSignedOrder(string id, RawTransaction rawTransaction)
 		{
+			if (string.IsNullOrEmpty(id))
+				throw new ArgumentNullException("id");
+			if (rawTransaction == null)
+				throw new ArgumentNullException("rawTransaction");
+
 			return _httpClient.Post<Order, RawTransaction>(string.Format("orders/{0}", id), rawTransaction);
 		}
 
@@ -202,6 +235,9 @@ namespace MetacoClient
 		/// <see cref="http://docs.metaco.apiary.io/#reference/orders/order-information/cancel-an-order">Online Documentation</see>
 		public void CancelOrder(string id)
 		{
+			if (string.IsNullOrEmpty(id))
+				throw new ArgumentNullException("id");
+
 			_httpClient.Delete("orders/" + id);
 		}
 
@@ -217,6 +253,9 @@ namespace MetacoClient
 		/// <see cref="http://docs.metaco.apiary.io/#reference/transactions/raw-transaction/get-a-raw-transaction">Online Documentation</see>
 		public TransactionToSign CreateTransaction(NewTransaction tx)
 		{
+			if (tx == null) 
+				throw new ArgumentNullException("tx");
+
 			var parms = new List<string>();
 			
 			if (tx.AmountAsset  > 0)
@@ -265,6 +304,9 @@ namespace MetacoClient
 		/// <see cref="http://docs.metaco.apiary.io/#reference/transactions/transaction-broadcast/broadcast-a-transaction">Online Documentation</see>
 		public TransactionBroadcastResult BroadcastTransaction(RawTransaction rawTransaction)
 		{
+			if (rawTransaction == null) 
+				throw new ArgumentNullException("rawTransaction");
+
 			return _httpClient.Post<TransactionBroadcastResult, RawTransaction>("transactions", rawTransaction);
 		}
 
@@ -281,6 +323,9 @@ namespace MetacoClient
 		/// <see cref="http://docs.metaco.apiary.io/#reference/transactions/transaction-broadcast/fetch-wallet-information">Online Documentation</see>
 		public WalletDetails GetWalletDetails(string address)
 		{
+			if (string.IsNullOrEmpty(address)) 
+				throw new ArgumentNullException("address");
+
 			return _httpClient.Get<WalletDetails>("transactions/" + address);
 		}
 	}

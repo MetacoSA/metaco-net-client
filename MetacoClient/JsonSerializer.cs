@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace MetacoClient
 {
-	internal class JsonSerializaer
+	internal class JsonSerializer
 	{
-		private JsonSerializerSettings _settings;
+		private readonly JsonSerializerSettings _settings;
 
-		public JsonSerializaer()
+		public JsonSerializer()
 		{
 			_settings = new JsonSerializerSettings {
 				ContractResolver = new NullToEmptyStringResolver(),
@@ -48,9 +46,9 @@ namespace MetacoClient
 		}
 	}
 
-	public class NullToEmptyStringValueProvider : IValueProvider
+	internal class NullToEmptyStringValueProvider : IValueProvider
 	{
-		private PropertyInfo _memberInfo;
+		private readonly PropertyInfo _memberInfo;
 		public NullToEmptyStringValueProvider(PropertyInfo memberInfo)
 		{
 			_memberInfo = memberInfo;
@@ -70,14 +68,14 @@ namespace MetacoClient
 		}
 	}
 
-    public class DateTimeToEpochConverter : JsonConverter
+    internal class DateTimeToEpochConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
             return typeof(DateTime).IsAssignableFrom(objectType) || typeof(DateTimeOffset).IsAssignableFrom(objectType) || typeof(DateTimeOffset?).IsAssignableFrom(objectType);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
             if(reader.Value == null)
                 return null;
@@ -87,7 +85,7 @@ namespace MetacoClient
             return result;
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             DateTime time;
             if (value is DateTime)
@@ -103,7 +101,7 @@ namespace MetacoClient
 
 	internal static class DateTimeExtensions
 	{
-		private static DateTimeOffset EpochMinValue = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+		private static readonly DateTimeOffset EpochMinValue = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
 		public static long ToEpoch(this DateTimeOffset dt)
 		{
@@ -114,10 +112,10 @@ namespace MetacoClient
 		{
 			dt = dt.ToUniversalTime();
 			if (dt < EpochMinValue)
-				throw new ArgumentOutOfRangeException("The supplied datetime can't be expressed in unix timestamp");
+				throw new ArgumentOutOfRangeException("dt", "The supplied datetime can't be expressed in unix timestamp");
 			var result = (long) (dt - EpochMinValue).TotalSeconds;
 			if (result > UInt32.MaxValue)
-				throw new ArgumentOutOfRangeException("The supplied datetime can't be expressed in unix timestamp");
+				throw new ArgumentOutOfRangeException("dt", "The supplied datetime can't be expressed in unix timestamp");
 			return result;
 		}
 

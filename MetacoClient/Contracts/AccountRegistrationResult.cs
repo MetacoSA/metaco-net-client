@@ -1,10 +1,12 @@
 
+using Newtonsoft.Json;
+
 namespace MetacoClient.Contracts
 {
 	public class AccountRegistrationResult {
-		////("apiId")
+		[JsonProperty("apiId")]
 		public string ApiId { get; set; }
-		////("apiKey")
+		[JsonProperty("apiKey")]
 		public string ApiKey { get; set; }
 	}
 }

@@ -11,17 +11,17 @@ namespace MetacoClient.Http
 	{
 		private readonly string _metacoApiId;
 		private readonly string _metacoApiKey;
-		private readonly string _metacoApiUrl;
+		private readonly Uri _metacoApiUrl;
 		private readonly bool _metacoTestingMode;
-		private readonly JsonSerializaer _serializer;
+		private readonly JsonSerializer _serializer;
 
-		public MetacoHttpClient(string metacoApiId, string metacoApiKey, string metacoApiUrl, bool metacoTestingMode)
+		public MetacoHttpClient(string metacoApiId, string metacoApiKey, Uri metacoApiUrl, bool metacoTestingMode)
 		{
 			this._metacoApiId = metacoApiId;
 			this._metacoApiKey = metacoApiKey;
 			this._metacoApiUrl = metacoApiUrl;
 			this._metacoTestingMode = metacoTestingMode;
-			this._serializer = new JsonSerializaer();
+			this._serializer = new JsonSerializer();
 		}
 
 		public string DebugInfo
@@ -71,7 +71,7 @@ namespace MetacoClient.Http
 		{
 			using(var client = CreateClient())
 			{
-				var json = JsonConvert.SerializeObject(data);
+				var json = _serializer.Serialize(data);
 				var content = new StringContent(json);
 				if (!string.IsNullOrEmpty(json))
 					content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -90,7 +90,7 @@ namespace MetacoClient.Http
 		{
 			using(var client = CreateClient())
 			{
-				var json = JsonConvert.SerializeObject(data);
+				var json = _serializer.Serialize(data);
 				var content = new StringContent(json);
 				if (!string.IsNullOrEmpty(json))
 					content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -114,13 +114,14 @@ namespace MetacoClient.Http
 				content = response.Content.ReadAsStringAsync().Result;
 				metacoError = JsonConvert.DeserializeObject<MetacoErrorResult>(content);
 				if (string.IsNullOrEmpty(metacoError.MetacoError))
-					throw new MetacoClientException(metacoError, ErrorType.UnknownError, content, (int) response.StatusCode, inner);
+					throw new MetacoClientException(metacoError, ErrorType.UnknownError, content, (int) response.StatusCode, null);
 			}
 			catch (Exception e)
 			{
-				metacoError = new MetacoErrorResult();
-				metacoError.MetacoError = "";
-				metacoError.Status= (int)response.StatusCode;
+				metacoError = new MetacoErrorResult {
+					MetacoError = "", 
+					Status = (int) response.StatusCode
+				};
 				inner = e;
 			}
 			var errorType = MetacoErrorsDefinitions.GetErrorType(metacoError);

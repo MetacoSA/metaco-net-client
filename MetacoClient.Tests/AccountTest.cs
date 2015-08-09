@@ -50,7 +50,7 @@ namespace MetacoClient.Tests
 			} 
 			catch (MetacoClientException e) 
 			{
-				Assert.Equal(e.ErrorType, ErrorType.SmsSendingFailed);
+				Assert.Equal(ErrorType.SmsSendingFailed, e.ErrorType);
 			}
 		}
 
@@ -61,8 +61,11 @@ namespace MetacoClient.Tests
 				var client = CreateClient();
 
 				var status = client.GetAccountStatus();
-			} catch (MetacoClientException e) {
-				Assert.Equal(e.ErrorType, ErrorType.Unauthorized);
+				throw new Exception("An MetacoClientException was expected");
+			}
+			catch (MetacoClientException e)
+			{
+				Assert.Equal(ErrorType.Unauthorized, e.ErrorType);
 			}
 		}
 	}

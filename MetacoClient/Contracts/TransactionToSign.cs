@@ -14,7 +14,7 @@ namespace MetacoClient.Contracts
 		}
 
 		[JsonProperty("inputs_to_sign")]
-		public List<InputsToSign> InputsToSign
+		public IEnumerable<InputsToSign> InputsToSign
 		{
 			get; 
 			set;

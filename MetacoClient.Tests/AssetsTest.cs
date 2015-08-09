@@ -1,6 +1,5 @@
 using System;
 using MetacoClient.Contracts;
-using NBitcoin;
 using Xunit;
 
 namespace MetacoClient.Tests
@@ -24,7 +23,7 @@ namespace MetacoClient.Tests
 
 			var asset = client.GetAsset("MTC:USD");
 			Assert.NotNull(asset);
-			Assert.Equal(asset.Definition.Ticker, "MTC:USD");
+			Assert.Equal("MTC:USD", asset.Definition.Ticker);
 		}
 
 		[Fact]
@@ -68,7 +67,7 @@ namespace MetacoClient.Tests
 
 			var historyResult = client.GetAssetsHistory(criteria, new[] {"USD"});
 			Assert.NotNull(historyResult);
-			Assert.True(historyResult.Assets.Length == 1);
+			Assert.Equal(1, historyResult.Assets.Length);
 		}
 	}
 }

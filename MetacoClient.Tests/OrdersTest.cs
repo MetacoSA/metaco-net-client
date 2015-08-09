@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using MetacoClient.Contracts;
@@ -13,15 +12,16 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CanProcessOrder()
 		{
-			var client = CreateAuthenticatedClient();
-
+			var addr = GetBitcoinAddress().ToString();
 			var newOrder = new NewOrder {
 				AmountAsset = 100L, 
-				Funding = new List<string>(new []{ GetBitcoinAddress().ToString()}),
-				Recipient = GetBitcoinAddress().ToString(),
+				Funding = new []{ addr },
+				Recipient = addr,
 				Ticker = "MTC:USD",
 				Type = OrderType.Buy
 			};
+
+			var client = CreateAuthenticatedClient();
 
 			var created = client.CreateOrder(newOrder);
 			Assert.NotNull(created);
@@ -67,7 +67,6 @@ namespace MetacoClient.Tests
 		[Fact]
 		public void CanCancelOrder() 
 		{
-			var client = CreateAuthenticatedClient();
 			var funding = GetBitcoinAddress().ToString();
 
 			var newOrder = new NewOrder {
@@ -78,6 +77,7 @@ namespace MetacoClient.Tests
 				Type = OrderType.Buy
 			};
 
+			var client = CreateAuthenticatedClient();
 			var created = client.CreateOrder(newOrder);
 			Assert.NotNull(created);
 			Assert.Equal(100, created.AmountAsset);
@@ -90,10 +90,10 @@ namespace MetacoClient.Tests
 				throw new Exception("Order " + created.Id + " took to long to go to Canceled state");
 			}
 			Assert.Equal("explicit_cancel", canceled.CancelReason);
-			Assert.Equal(canceled.Status, "Canceled");
+			Assert.Equal("Canceled", canceled.Status);
 		}
 
-		private Order WaitForOrderState(MetacoClient client, string orderId, string status)
+		private Order WaitForOrderState(RestClient client, string orderId, string status)
 		{
 			var remainingTries = 15;
 			var orderReady = false;
