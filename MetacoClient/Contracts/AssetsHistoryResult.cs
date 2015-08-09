@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace MetacoClient.Contracts
@@ -5,14 +7,14 @@ namespace MetacoClient.Contracts
 	public class AssetsHistoryResult 
 	{
 		[JsonProperty("timestamp")]
-		public int Timestamp
+		public DateTimeOffset Timestamp
 		{
 			get; 
 			set;
 		}
 
 		[JsonProperty("assets")]
-		public AssetHistory[] Assets
+		public IEnumerable<AssetHistory> Assets
 		{
 			get; 
 			set;

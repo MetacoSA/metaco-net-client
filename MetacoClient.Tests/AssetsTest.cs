@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MetacoClient.Contracts;
 using Xunit;
 
@@ -55,7 +56,7 @@ namespace MetacoClient.Tests
 
 			var historyResult = client.GetAssetsHistory(criteria);
 			Assert.NotNull(historyResult);
-			Assert.True(historyResult.Assets.Length > 0);
+			Assert.True(historyResult.Assets.Any());
 		}
 
 		[Fact]
@@ -67,7 +68,7 @@ namespace MetacoClient.Tests
 
 			var historyResult = client.GetAssetsHistory(criteria, new[] {"USD"});
 			Assert.NotNull(historyResult);
-			Assert.Equal(1, historyResult.Assets.Length);
+			Assert.Equal(1, historyResult.Assets.Count());
 		}
 	}
 }

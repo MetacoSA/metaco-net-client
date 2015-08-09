@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -12,13 +13,13 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("created")]
-		public int Created
+		public DateTimeOffset Created
 		{
 			get; 
 			set;
 		}
 		[JsonProperty("expiration")]
-		public int Expiration
+		public DateTimeOffset Expiration
 		{
 			get; 
 			set;

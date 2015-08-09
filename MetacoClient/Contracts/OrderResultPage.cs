@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace MetacoClient.Contracts
@@ -12,7 +13,7 @@ namespace MetacoClient.Contracts
 			set;
 		}
 		[JsonProperty("orders")]
-		public Order[] Orders
+		public IEnumerable<Order> Orders
 		{
 			get; 
 			set;
