@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
 using MetacoClient.Contracts;
-using Xunit;
+using NUnit.Framework;
 
 namespace MetacoClient.Tests
 {
+	[TestFixture]
 	public class AssetsTest : MetacoClientTestBase
 	{
-		[Fact]
+		[Test]
 		public void CanGetAssets()
 		{
 			var client = CreateClient();
@@ -17,17 +18,17 @@ namespace MetacoClient.Tests
 			Assert.True(assets.Length > 0);
 		}
 
-		[Fact]
+		[Test]
 		public void CanGetAsset()
 		{
 			var client = CreateClient();
 
 			var asset = client.GetAsset("MTC:USD");
 			Assert.NotNull(asset);
-			Assert.Equal("MTC:USD", asset.Definition.Ticker);
+			Assert.AreEqual("MTC:USD", asset.Definition.Ticker);
 		}
 
-		[Fact]
+		[Test]
 		public void CannotGetFalseAsset()
 		{
 			var client = CreateClient();
@@ -38,16 +39,16 @@ namespace MetacoClient.Tests
 			}
 			catch (MetacoClientException e)
 			{
-				Assert.Equal(e.ErrorType, ErrorType.InvalidInput);
-				Assert.Equal(e.Content, "{\r\n  \"status\": 404,\r\n  \"metaco_error\": \"invalid_input\",\r\n  \"parameter_name\": \"tickerId\",\r\n  \"message\": \"Ticker not found\"\r\n}");
-				Assert.Equal(e.MetacoError.Message, "Ticker not found");
-				Assert.Equal(e.StatusCode, 404);
-				Assert.Equal(e.MetacoError.Location, null);
-				Assert.Equal(e.MetacoError.ParameterName, "tickerId");
+				Assert.AreEqual(e.ErrorType, ErrorType.InvalidInput);
+				Assert.AreEqual(e.Content, "{\r\n  \"status\": 404,\r\n  \"metaco_error\": \"invalid_input\",\r\n  \"parameter_name\": \"tickerId\",\r\n  \"message\": \"Ticker not found\"\r\n}");
+				Assert.AreEqual(e.MetacoError.Message, "Ticker not found");
+				Assert.AreEqual(e.StatusCode, 404);
+				Assert.AreEqual(e.MetacoError.Location, null);
+				Assert.AreEqual(e.MetacoError.ParameterName, "tickerId");
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void CanGetAssetsHistory()
 		{
 			var client = CreateClient();
@@ -59,7 +60,7 @@ namespace MetacoClient.Tests
 			Assert.True(historyResult.Assets.Any());
 		}
 
-		[Fact]
+		[Test]
 		public void CanGetSpecificAssetsHistory()
 		{
 			var client = CreateClient();
@@ -68,7 +69,7 @@ namespace MetacoClient.Tests
 
 			var historyResult = client.GetAssetsHistory(criteria, new[] {"USD"});
 			Assert.NotNull(historyResult);
-			Assert.Equal(1, historyResult.Assets.Count());
+			Assert.AreEqual(1, historyResult.Assets.Count());
 		}
 	}
 }

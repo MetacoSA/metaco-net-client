@@ -2,7 +2,7 @@ using System.Configuration;
 using MetacoClient.Contracts;
 using NBitcoin;
 using NBitcoin.DataEncoders;
-using Xunit;
+using NUnit.Framework;
 using Transaction = NBitcoin.Transaction;
 
 namespace MetacoClient.Tests

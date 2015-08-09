@@ -1,12 +1,13 @@
 using System;
 using MetacoClient.Contracts;
-using Xunit;
+using NUnit.Framework;
 
 namespace MetacoClient.Tests
 {
+	[TestFixture]
 	public class AccountTest : MetacoClientTestBase 
 	{
-		[Fact]
+		[Test]
 		public void ClientCanRegisterAndValidateAccount()
 		{
 			var client = CreateClient();
@@ -34,12 +35,12 @@ namespace MetacoClient.Tests
 			} 
 			catch (MetacoClientException e) 
 			{
-				Assert.Equal(e.ErrorType, ErrorType.PhoneConfirmationNotFound);
+				Assert.AreEqual(e.ErrorType, ErrorType.PhoneConfirmationNotFound);
 			}
 		}
 
 
-		[Fact]
+		[Test]
 		public void ClientCantRegisterAccount() 
 		{
 			try 
@@ -50,11 +51,11 @@ namespace MetacoClient.Tests
 			} 
 			catch (MetacoClientException e) 
 			{
-				Assert.Equal(ErrorType.SmsSendingFailed, e.ErrorType);
+				Assert.AreEqual(ErrorType.SmsSendingFailed, e.ErrorType);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void ClientCantGetAccountStatus() {
 			try 
 			{
@@ -65,7 +66,7 @@ namespace MetacoClient.Tests
 			}
 			catch (MetacoClientException e)
 			{
-				Assert.Equal(ErrorType.Unauthorized, e.ErrorType);
+				Assert.AreEqual(ErrorType.Unauthorized, e.ErrorType);
 			}
 		}
 	}

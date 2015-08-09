@@ -3,7 +3,7 @@
 [Metaco](https://metaco.com) REST API provides a set of services to integrate Metaco into third-party applications. It offers trading and payment facilities as well as wallet management features.
 
 Our .NET Client implements every single functionality of the API.
-You can find a detailed documentation here : [API Documentation](http://docs.metaco.apiary.io/), and the javadoc here : [JavaDoc](http://metacosa.github.io/metaco-net-client/)
+You can find a detailed documentation here : [API Documentation](http://docs.metaco.apiary.io/).
 
 Installation
 ----------------------------------------------
@@ -14,10 +14,6 @@ With nuget :
 > **Install-Package MetacoClient** 
 
 Go on the [nuget website](https://www.nuget.org/packages/MetacoClient/) for more information.
-
-### Manual
-
-Our latest releases should also be available on the [Github releases](https://github.com/MetacoSA/metaco-net-client/releases). You can download our package file here.
 
 
 Usage

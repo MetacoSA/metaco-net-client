@@ -2,13 +2,13 @@
 using System;
 using System.Linq;
 using MetacoClient.Contracts;
-using Xunit;
+using NUnit.Framework;
 
 namespace MetacoClient.Tests
 {
 	public class TransactionsTest : MetacoClientTestBase
 	{
-		[Fact]
+		[Test]
 		public void CanProcessAssetTransaction() 
 		{
 			var addr = GetBitcoinAddress().ToString();
@@ -25,7 +25,7 @@ namespace MetacoClient.Tests
 			var created = client.CreateTransaction(newTransaction);
 			Assert.NotNull(created);
 			Assert.NotNull(created.Raw);
-			Assert.Equal(addr, created.InputsToSign.First().SigningAddress);
+			Assert.AreEqual(addr, created.InputsToSign.First().SigningAddress);
 
 			var rawTx = new RawTransaction {Raw = GetHexSignedTransaction(created)};
 			var result = client.BroadcastTransaction(rawTx);
@@ -33,7 +33,7 @@ namespace MetacoClient.Tests
 			Assert.True(result.IsSuccess);
 		}
 
-		[Fact]
+		[Test]
 		public void CanProcessBtcTransaction() 
 		{
 			var addr = GetBitcoinAddress().ToString();
@@ -50,7 +50,7 @@ namespace MetacoClient.Tests
 			var created = client.CreateTransaction(newTransaction);
 			Assert.NotNull(created);
 			Assert.NotNull(created.Raw);
-			Assert.Equal(addr, created.InputsToSign.First().SigningAddress);
+			Assert.AreEqual(addr, created.InputsToSign.First().SigningAddress);
 
 			var rawTx = new RawTransaction{ Raw = GetHexSignedTransaction(created)};
 			var result = client.BroadcastTransaction(rawTx);
@@ -59,7 +59,7 @@ namespace MetacoClient.Tests
 		}
 
 
-		[Fact]
+		[Test]
 		public void CantBroadcastTransaction() 
 		{
 			try {
@@ -69,18 +69,18 @@ namespace MetacoClient.Tests
 				client.BroadcastTransaction(raw);
 				throw new Exception("An MetacoException was expected!");
 			} catch (MetacoClientException e) {
-				Assert.Equal(ErrorType.InvalidInput, e.ErrorType);
+				Assert.AreEqual(ErrorType.InvalidInput, e.ErrorType);
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void CanGetWalletDetails() 
 		{
 			var addr = GetBitcoinAddress().ToString();
 			var client = CreateAuthenticatedClient();
 			var walletDetails = client.GetWalletDetails(addr);
 			Assert.NotNull(walletDetails);
-			Assert.Equal(addr, walletDetails.Addresses.First());
+			Assert.AreEqual(addr, walletDetails.Addresses.First());
 		}
 	}
 }

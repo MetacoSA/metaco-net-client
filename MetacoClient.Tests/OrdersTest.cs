@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using System.Threading;
 using MetacoClient.Contracts;
-using Xunit;
+using NUnit.Framework;
 
 namespace MetacoClient.Tests
 {
+	[TestFixture]
 	public class OrdersTest : MetacoClientTestBase
 	{
-
-		[Fact]
+		[Test]
 		public void CanProcessOrder()
 		{
 			var addr = GetBitcoinAddress().ToString();
@@ -25,7 +25,7 @@ namespace MetacoClient.Tests
 
 			var created = client.CreateOrder(newOrder);
 			Assert.NotNull(created);
-			Assert.Equal(100L, created.AmountAsset);
+			Assert.AreEqual(100L, created.AmountAsset);
 
 			var orderToSign = WaitForOrderState(client, created.Id, "Signing");
 			if (orderToSign == null) {
@@ -45,13 +45,14 @@ namespace MetacoClient.Tests
 				throw new Exception("Order " + created.Id + " took to long to go to Unconfirmed state");
 			}
 
-			Assert.Equal(1, unconfirmed.AmountAsset);
+			Assert.AreEqual(1, unconfirmed.AmountAsset);
 
 			/** Try to delete broadcasting order **/
 			try {
 				client.CancelOrder(unconfirmed.Id);
+				throw new Exception("A MetacoClientException was expected!");
 			} catch (MetacoClientException e) {
-				Assert.Equal(ErrorType.OrderNotCancellable, e.ErrorType);
+				Assert.AreEqual(ErrorType.OrderNotCancellable, e.ErrorType);
 			}
 
 
@@ -64,7 +65,7 @@ namespace MetacoClient.Tests
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void CanCancelOrder() 
 		{
 			var funding = GetBitcoinAddress().ToString();
@@ -80,7 +81,7 @@ namespace MetacoClient.Tests
 			var client = CreateAuthenticatedClient();
 			var created = client.CreateOrder(newOrder);
 			Assert.NotNull(created);
-			Assert.Equal(100, created.AmountAsset);
+			Assert.AreEqual(100, created.AmountAsset);
 
 			client.CancelOrder(created.Id);
 
@@ -89,8 +90,8 @@ namespace MetacoClient.Tests
 			if (canceled == null) {
 				throw new Exception("Order " + created.Id + " took to long to go to Canceled state");
 			}
-			Assert.Equal("explicit_cancel", canceled.CancelReason);
-			Assert.Equal("Canceled", canceled.Status);
+			Assert.AreEqual("explicit_cancel", canceled.CancelReason);
+			Assert.AreEqual("Canceled", canceled.Status);
 		}
 
 		private Order WaitForOrderState(RestClient client, string orderId, string status)
