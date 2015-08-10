@@ -45,7 +45,7 @@ namespace MetacoClient.Tests
 				throw new Exception("Order " + created.Id + " took to long to go to Unconfirmed state");
 			}
 
-			Assert.AreEqual(1, unconfirmed.AmountAsset);
+			Assert.AreEqual(100, unconfirmed.AmountAsset);
 
 			/** Try to delete broadcasting order **/
 			try {
