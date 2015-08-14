@@ -8,7 +8,7 @@ You can find a detailed documentation here : [API Documentation](http://docs.met
 Installation
 ----------------------------------------------
 
-### Using Maven
+### Using NuGet
 
 With nuget :
 > **Install-Package MetacoClient** 
@@ -36,7 +36,7 @@ And run the tests
 
 Known Issues / Gotcha
 ----------------------------------------------
-* The api is still unstable.
+* The api client is still unstable.
 
 License
 ----------------------------------------------
