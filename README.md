@@ -36,7 +36,7 @@ And run the tests
 
 Known Issues / Gotcha
 ----------------------------------------------
-* The api client is still unstable.
+* The api is still unstable.
 
 License
 ----------------------------------------------
