@@ -82,5 +82,17 @@ namespace MetacoClient.Tests
 			Assert.NotNull(walletDetails);
 			Assert.AreEqual(addr, walletDetails.Addresses.First());
 		}
+
+		[Test]
+		public void CanGetPaginatedWalletDetails()
+		{
+			var addr = GetBitcoinAddress().ToString();
+			var client = CreateAuthenticatedClient();
+
+			var walletDetails = client.GetWalletDetails(addr, Page.Create(0,1));
+			Assert.NotNull(walletDetails);
+			Assert.AreEqual(1, walletDetails.Transactions.Count());
+			Assert.AreEqual(addr, walletDetails.Addresses.First());
+		}
 	}
 }

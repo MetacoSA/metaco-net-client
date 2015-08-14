@@ -33,10 +33,16 @@ namespace MetacoClient.Http
 		private HttpClient CreateClient()
 		{
 			var client = new HttpClient();
-			client.DefaultRequestHeaders.Add("X-Metaco-Id", _metacoApiId);
-			client.DefaultRequestHeaders.Add("X-Metaco-Key", _metacoApiKey);
+			
+			if (!string.IsNullOrEmpty(_metacoApiId) && !string.IsNullOrEmpty(_metacoApiKey))
+			{
+				client.DefaultRequestHeaders.Add("X-Metaco-Id", _metacoApiId);
+				client.DefaultRequestHeaders.Add("X-Metaco-Key", _metacoApiKey);
+			}
 			if (_metacoTestingMode)
+			{
 				client.DefaultRequestHeaders.Add("X-Metaco-Debug", "true");
+			}
 
 			return client;
 		}

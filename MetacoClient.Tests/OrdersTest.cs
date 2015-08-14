@@ -94,6 +94,16 @@ namespace MetacoClient.Tests
 			Assert.AreEqual("Canceled", canceled.Status);
 		}
 
+		[Test]
+		public void CanGetPaginatedOrders()
+		{
+			var client = CreateAuthenticatedClient();
+
+			var orders = client.GetOrders(Page.Create(0, 1));
+			Assert.NotNull(orders);
+			Assert.AreEqual(1, orders.Orders.Count());
+		}
+
 		private Order WaitForOrderState(RestClient client, string orderId, string status)
 		{
 			var remainingTries = 15;

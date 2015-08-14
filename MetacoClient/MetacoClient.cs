@@ -9,6 +9,7 @@ namespace MetacoClient
 	{
 		private readonly MetacoHttpClient _httpClient;
 
+		#region Constructors
 		public string LatestDebugData
 		{
 			get { return _httpClient.DebugInfo; }
@@ -40,7 +41,7 @@ namespace MetacoClient
 				throw new ArgumentNullException("apiUrl");
 			_httpClient = new MetacoHttpClient(apiId, apiKey, apiUrl, testingMode);
 		}
-
+		#endregion
 
 		/// <summary>
 		/// Register an account on Metaco
@@ -152,7 +153,6 @@ namespace MetacoClient
 					criteria.To.ToEpoch(), 
 					criteria.Freq, 
 					criteria.OrderAsc));
-
 		}
 
 		/// <summary>
@@ -182,7 +182,22 @@ namespace MetacoClient
 		/// <remarks>Requires Authentication</remarks>
 		public OrderResultPage GetOrders()
 		{
-			return _httpClient.Get<OrderResultPage>("orders");
+			return GetOrders(Page.NoPagination);
+		}
+
+		/// <summary>
+		/// Returns the user's orders
+		/// </summary>
+		/// <returns>The orders array</returns>
+		/// <exception cref="MetacoClientException"></exception>
+		/// <see cref="http://docs.metaco.apiary.io/#reference/orders/orders-management/request-an-order">Online Documentation</see>
+		/// <remarks>Requires Authentication</remarks>
+		public OrderResultPage GetOrders(Page page)
+		{
+			if (page == null)
+				throw new ArgumentNullException("page");
+
+			return _httpClient.Get<OrderResultPage>("orders" + page.ToQueryString());
 		}
 
 		/// <summary>
@@ -326,7 +341,29 @@ namespace MetacoClient
 			if (string.IsNullOrEmpty(address)) 
 				throw new ArgumentNullException("address");
 
-			return _httpClient.Get<WalletDetails>("transactions/" + address);
+			return GetWalletDetails(address, Page.NoPagination);
+		}
+
+		/// <summary>
+		/// Returns the current wallet state
+		/// Contains the current balances, the values and the transaction history
+		/// </summary>
+		/// <param name="address"></param>
+		/// <param name="page"> </param>
+		/// <returns>The wallet details</returns>
+		/// <exception cref="MetacoClientException"></exception>
+		/// <remarks>
+		/// Requires Authentication
+		/// </remarks>
+		/// <see cref="http://docs.metaco.apiary.io/#reference/transactions/transaction-broadcast/fetch-wallet-information">Online Documentation</see>
+		public WalletDetails GetWalletDetails(string address, Page page)
+		{
+			if (string.IsNullOrEmpty(address))
+				throw new ArgumentNullException("address");
+			if (page == null)
+				throw new ArgumentNullException("page");
+
+			return _httpClient.Get<WalletDetails>(string.Format("transactions/{0}{1}", address, page.ToQueryString()));
 		}
 	}
 }
