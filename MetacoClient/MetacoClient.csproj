@@ -45,8 +45,11 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Addresses\AddressUtils.cs" />
+    <Compile Include="Addresses\Base58Encoder.cs" />
     <Compile Include="Contracts\AccountRegistrationResult.cs" />
     <Compile Include="Contracts\AccountStatus.cs" />
     <Compile Include="Contracts\Asset.cs" />
@@ -84,8 +87,11 @@
     <Compile Include="HttpClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
