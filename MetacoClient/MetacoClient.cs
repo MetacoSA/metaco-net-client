@@ -111,51 +111,6 @@ namespace MetacoClient
 		}
 
 		/// <summary>
-		/// Returns the history for all the available assets according to the given criteria
-		/// </summary>
-		/// <param name="criteria">The search criteria</param>
-		/// <returns>The history object</returns>
-		/// <exception cref="MetacoClientException"></exception>
-		/// <see cref="http://docs.metaco.apiary.io/#reference/assets/asset-information/retrieve-an-asset">Online Documentation</see>
-		/// <remarks>Requires Authentication</remarks>
-		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria)
-		{
-			if (criteria == null) 
-				throw new ArgumentNullException("criteria");
-
-			return GetAssetsHistory(criteria, new string[0]);
-		}
-
-		/// <summary>
-		/// Returns the history for the provided assets according to the given criteria
-		/// </summary>
-		/// <param name="criteria">The search criteria</param>
-		///<param name="tickers">The assets ticker</param>
-		///<returns>The history object</returns>
-		/// <exception cref="MetacoClientException"></exception>
-		/// <see cref="http://docs.metaco.apiary.io/#reference/assets/assets-history/retrieve-history-of-all-assets">Online Documentation</see>
-		/// <remarks>Assets must be given using this format : USD,XAU,etc..</remarks>
-		public AssetsHistoryResult GetAssetsHistory(HistoryCriteria criteria, IEnumerable<string> tickers)
-		{
-			if (criteria == null) 
-				throw new ArgumentNullException("criteria");
-			if (tickers == null) 
-				throw new ArgumentNullException("tickers");
-
-			var tickersStr = string.Join(",", tickers);
-			tickersStr = !string.IsNullOrEmpty(tickersStr) ? tickersStr : "all";
-			const string urlTemplate = "assets/history?underlyings={0}&from={1}&to={2}&freq={3}&orderAsc={4}";
-
-			return _httpClient.Get<AssetsHistoryResult>(
-				string.Format(urlTemplate, 
-					tickersStr, 
-					criteria.From.ToEpoch(), 
-					criteria.To.ToEpoch(), 
-					criteria.Freq, 
-					criteria.OrderAsc));
-		}
-
-		/// <summary>
 		/// Create an order using the provided parameters
 		/// This order will be processed in our system
 		/// It will require your signature later when the trade state will be Signing

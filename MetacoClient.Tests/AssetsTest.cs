@@ -47,29 +47,5 @@ namespace MetacoClient.Tests
 				Assert.AreEqual(e.MetacoError.ParameterName, "tickerId");
 			}
 		}
-
-		[Test]
-		public void CanGetAssetsHistory()
-		{
-			var client = CreateClient();
-
-			var criteria = new HistoryCriteria(DateTimeOffset.UtcNow.AddSeconds(-30 * 60), DateTimeOffset.UtcNow, "10m", false);
-
-			var historyResult = client.GetAssetsHistory(criteria);
-			Assert.NotNull(historyResult);
-			Assert.True(historyResult.Assets.Any());
-		}
-
-		[Test]
-		public void CanGetSpecificAssetsHistory()
-		{
-			var client = CreateClient();
-
-			var criteria = new HistoryCriteria(DateTimeOffset.UtcNow.AddSeconds(-30 * 60), DateTimeOffset.UtcNow, "10m", false);
-
-			var historyResult = client.GetAssetsHistory(criteria, new[] {"USD"});
-			Assert.NotNull(historyResult);
-			Assert.AreEqual(1, historyResult.Assets.Count());
-		}
 	}
 }

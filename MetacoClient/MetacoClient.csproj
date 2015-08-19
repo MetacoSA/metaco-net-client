@@ -53,8 +53,6 @@
     <Compile Include="Contracts\AccountRegistrationResult.cs" />
     <Compile Include="Contracts\AccountStatus.cs" />
     <Compile Include="Contracts\Asset.cs" />
-    <Compile Include="Contracts\AssetHistory.cs" />
-    <Compile Include="Contracts\AssetsHistoryResult.cs" />
     <Compile Include="Contracts\Balance.cs" />
     <Compile Include="Contracts\BroadcastError.cs" />
     <Compile Include="Contracts\Definition.cs" />
