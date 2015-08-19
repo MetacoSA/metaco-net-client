@@ -5,22 +5,17 @@ using System.Security.Cryptography;
 
 namespace MetacoClient
 {
-	public class Base58Encoder
+	internal static class Base58CheckEncoder
 	{
-		public string Encode(byte[] data, int offset, int count)
+		public static string Encode(byte[] data, int offset, int count)
 		{
-			if (Check)
-			{
-				var toEncode = new byte[count + 4];
-				Buffer.BlockCopy(data, offset, toEncode, 0, count);
+			var toEncode = new byte[count + 4];
+			Buffer.BlockCopy(data, offset, toEncode, 0, count);
 
-				var hash = Hash.Hash256(data, offset, count);
-				Buffer.BlockCopy(hash, 0, toEncode, count, 4);
+			var hash = Hash.Hash256(data, offset, count);
+			Buffer.BlockCopy(hash, 0, toEncode, count, 4);
 
-				return EncodeDataCore(toEncode, 0, toEncode.Length);
-			}
-
-			return EncodeDataCore(data, offset, count);
+			return EncodeDataCore(toEncode, 0, toEncode.Length);
 		}
 
 		private static string EncodeDataCore(byte[] data, int offset, int count)
@@ -62,35 +57,30 @@ namespace MetacoClient
 		const string PszBase58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
 
-		public byte[] Decode(string encoded)
+		public static byte[] Decode(string encoded)
 		{
 			if (encoded == null)
 				throw new ArgumentNullException("encoded");
 
-			if (Check)
+			var vchRet = DecodeDataCore(encoded);
+			if (vchRet.Length < 4)
 			{
-				var vchRet = DecodeDataCore(encoded);
-				if (vchRet.Length < 4)
-				{
-					Array.Clear(vchRet, 0, vchRet.Length);
-					throw new FormatException("Invalid checked base 58 string");
-				}
-
-				var len = vchRet.Length - 4;
-				var calculatedHash = Hash.Hash256(vchRet, 0, len).SafeSubarray(0, 4);
-				var expectedHash = vchRet.SafeSubarray(len, 4);
-
-				if (!calculatedHash.ArrayEqual(expectedHash))
-				{
-					Array.Clear(vchRet, 0, vchRet.Length);
-					throw new FormatException("Invalid hash of the base 58 string");
-				}
-				var segment = new byte[len];
-				Buffer.BlockCopy(vchRet, 0, segment, 0, len);
-				return segment;
+				Array.Clear(vchRet, 0, vchRet.Length);
+				throw new FormatException("Invalid checked base 58 string");
 			}
 
-			return DecodeDataCore(encoded);
+			var len = vchRet.Length - 4;
+			var calculatedHash = Hash.Hash256(vchRet, 0, len).SafeSubarray(0, 4);
+			var expectedHash = vchRet.SafeSubarray(len, 4);
+
+			if (!calculatedHash.ArrayEqual(expectedHash))
+			{
+				Array.Clear(vchRet, 0, vchRet.Length);
+				throw new FormatException("Invalid hash of the base 58 string");
+			}
+			var segment = new byte[len];
+			Buffer.BlockCopy(vchRet, 0, segment, 0, len);
+			return segment;
 		}
 
 		private static byte[] DecodeDataCore(string encoded)
@@ -123,7 +113,7 @@ namespace MetacoClient
 						throw new FormatException("Invalid base 58 string");
 					break;
 				}
-				BigInteger bnChar = new BigInteger(p1);
+				var bnChar = new BigInteger(p1);
 				bn = BigInteger.Multiply(bn, bn58);
 				bn += bnChar;
 			}
@@ -147,16 +137,9 @@ namespace MetacoClient
 			Array.Copy(vchTmp.Reverse().ToArray(), 0, result, nLeadingZeros, vchTmp.Length);
 			return result;
 		}
-
-
-		public bool Check
-		{
-			get;
-			set;
-		}
 	}
 
-	internal class Hash
+	internal static class Hash
 	{
 		public static byte[] Hash256(byte[] data, int offset, int count)
 		{

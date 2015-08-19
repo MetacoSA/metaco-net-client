@@ -48,6 +48,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Addresses\AddressUtils.cs" />
     <Compile Include="Addresses\Base58Encoder.cs" />
     <Compile Include="Contracts\AccountRegistrationResult.cs" />
     <Compile Include="Contracts\AccountStatus.cs" />
@@ -86,7 +87,9 @@
     <Compile Include="HttpClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
