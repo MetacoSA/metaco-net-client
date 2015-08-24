@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Metaco.Client.Addresses;
 
-namespace MetacoClient.Addresses
+namespace Metaco.Client
 {
 	public static class AddressUtils
 	{

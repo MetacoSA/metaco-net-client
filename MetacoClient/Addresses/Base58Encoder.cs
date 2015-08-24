@@ -3,7 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace MetacoClient
+namespace Metaco.Client.Addresses
 {
 	internal static class Base58CheckEncoder
 	{

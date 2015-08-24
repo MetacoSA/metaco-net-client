@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading;
-using MetacoClient.Contracts;
+using Metaco.Client;
+using Metaco.Client.Contracts;
 using NUnit.Framework;
 
 namespace MetacoClient.Tests

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MetacoClient.Contracts;
-using MetacoClient.Http;
+using Metaco.Client.Contracts;
 
-namespace MetacoClient
+namespace Metaco.Client
 {
 	public class RestClient
 	{

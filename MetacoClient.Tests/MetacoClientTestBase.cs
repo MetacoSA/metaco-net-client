@@ -1,5 +1,6 @@
 using System.Configuration;
-using MetacoClient.Contracts;
+using Metaco.Client;
+using Metaco.Client.Contracts;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using NUnit.Framework;

@@ -5,7 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace MetacoClient
+namespace Metaco.Client
 {
 	internal class JsonSerializer
 	{

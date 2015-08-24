@@ -1,8 +1,7 @@
-
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace MetacoClient.Contracts
+namespace Metaco.Client.Contracts
 {
 	public class OrderResultPage 
 	{

@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MetacoClient.Contracts
+namespace Metaco.Client.Contracts
 {
 	public class Order 
 	{

@@ -1,7 +1,6 @@
-
 using Newtonsoft.Json;
 
-namespace MetacoClient.Contracts
+namespace Metaco.Client.Contracts
 {
 	public class AccountRegistrationResult {
 		[JsonProperty("apiId")]

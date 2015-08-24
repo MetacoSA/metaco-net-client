@@ -1,5 +1,5 @@
 ﻿using System;
-using MetacoClient.Addresses;
+using Metaco.Client;
 using NUnit.Framework;
 
 namespace MetacoClient.Tests

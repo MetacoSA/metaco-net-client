@@ -4,8 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using JsonSerializer = Metaco.Client.JsonSerializer;
 
-namespace MetacoClient.Http
+namespace Metaco.Client
 {
 	internal class MetacoHttpClient
 	{

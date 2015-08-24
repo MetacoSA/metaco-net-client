@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MetacoClient
+namespace Metaco.Client
 {
 	[Serializable]
 	public class MetacoClientException : Exception 

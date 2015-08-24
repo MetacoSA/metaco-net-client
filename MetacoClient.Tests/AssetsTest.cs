@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using MetacoClient.Contracts;
+using Metaco.Client;
 using NUnit.Framework;
 
 namespace MetacoClient.Tests
