@@ -46,6 +46,8 @@ namespace Metaco.Client
 		/// Register an account on Metaco
 		/// Sends an SMS to the provided phone number
 		/// If you are in debug mode, this request will return a HTTP header X-Metaco-DebugData with the validation code, it won't be send by SMS
+		///
+		/// If you are a wallet registering accounts for your clients, don't forget to set the provider_id with your Name/ID.
 		/// </summary>
 		/// <param name="request">The request containing the phone number.</param>
 		/// <returns>The initial account settings</returns>

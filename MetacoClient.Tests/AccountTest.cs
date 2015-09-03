@@ -14,7 +14,12 @@ namespace MetacoClient.Tests
 			var client = CreateClient();
 
 			/** Account registration **/
-			var result = client.RegisterAccount(new RegisterAccountRequest {Phone = "+15005550006"});
+			var result = client.RegisterAccount(
+				new RegisterAccountRequest {
+					Phone = "+15005550006",
+					ProviderId =  "TestsProvider"
+				});
+
 			Assert.NotNull(result.ApiId);
 
 			var validationCode = client.LatestDebugData;

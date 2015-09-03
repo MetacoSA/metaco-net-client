@@ -11,5 +11,11 @@ namespace Metaco.Client.Contracts
 			set;
 		}
 
+		[JsonProperty("provider_id")]
+		public string ProviderId
+		{
+			get; 
+			set;
+		}
 	}
 }
