@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using JsonSerializer = Metaco.Client.JsonSerializer;
+using System.Runtime.ExceptionServices;
 
 namespace Metaco.Client
 {
@@ -34,7 +35,7 @@ namespace Metaco.Client
 		private HttpClient CreateClient()
 		{
 			var client = new HttpClient();
-			
+            client.Timeout = TimeSpan.FromMinutes(2.0);
 			if (!string.IsNullOrEmpty(_metacoApiId) && !string.IsNullOrEmpty(_metacoApiKey))
 			{
 				client.DefaultRequestHeaders.Add("X-Metaco-Id", _metacoApiId);
@@ -52,14 +53,23 @@ namespace Metaco.Client
 		{
 			using(var client = CreateClient())
 			{
-				var response = client.GetAsync(GetUrl(relativeAddress)).Result;
-				if (!response.IsSuccessStatusCode)
-					HandleInvalidResponse(response);
+                try
+                {
 
-				FetchDebugData(response);
-				var result = response.Content.ReadAsStringAsync().Result;
+                    var response = client.GetAsync(GetUrl(relativeAddress)).Result;
+                    if(!response.IsSuccessStatusCode)
+                        HandleInvalidResponse(response);
 
-				return _serializer.Deserialize<T>(result);
+                    FetchDebugData(response);
+                    var result = response.Content.ReadAsStringAsync().Result;
+
+                    return _serializer.Deserialize<T>(result);
+                }
+                catch(AggregateException ex)
+                {
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                    throw;
+                }
 			}
 		}
 
